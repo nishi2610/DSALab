@@ -1,0 +1,180 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct dll_node{
+    int info;
+    struct dll_node* next, *prev;
+};
+typedef struct dll_node node;
+node* create_node(){
+    int no;
+    printf("Enter data for node:");
+    scanf("%d",&no);
+    node* new_node=(node*)malloc(sizeof(node));
+    new_node->info=no;
+    new_node->next=NULL;
+    new_node->prev=NULL;
+    return new_node;
+}
+node *insert_end(node* head, node* new_node){
+    if(head!=NULL){
+        node* tp=head;
+        while(tp->next!=NULL)
+            tp=tp->next;
+        tp->next=new_node;
+        new_node->prev=tp;
+    }
+    else
+        head=new_node;
+    return head;
+}
+node *insert_beg(node* head, node* new_node){
+    if(head!=NULL){
+        new_node->next=head;
+        head->prev=new_node;
+        }
+    head=new_node;
+    return head;
+}
+node* insert_after(node* head, node* new_node, int key){
+    if(head!=NULL){
+        node*tp=head;
+        while(tp->next!=NULL && tp->info!=key)
+            tp=tp->next;
+        if(tp->info==key){
+            new_node->next=tp->next;
+            if(tp->next!=NULL)
+                tp->next->prev=new_node;
+            new_node->prev=tp;
+            tp->next=new_node;
+        }
+        else
+            printf("Key Doesn't Exist!!");
+    }
+    else
+        printf("Linked List Doesn't Exist!!");
+    return head;
+}
+node* delete_end(node* head){
+    if(head!=NULL){
+        node* tp=head;
+        if(head->next==NULL){
+            free(head);
+            head=NULL;
+        }
+        else{
+            while(tp->next!=NULL)
+                tp=tp->next;
+            tp->prev->next=NULL;
+            free(tp);
+        }
+    }
+    else
+        printf("Linked List Doesn't Exist!!");
+    return head;
+}
+node* delete_beg(node*head){
+if(head!=NULL){
+    node*tp=head;
+    head=head->next;
+    if(head!=NULL)
+        head->prev=NULL;
+    free(tp);
+}
+else
+    printf("Linked List Doesn't Exist!!");
+return head;
+}
+node* delete_after(node* head, int key){
+if(head!=NULL){
+    node* tp=head;
+    while(tp->next!=NULL && tp->info!=key)
+        tp=tp->next;
+    if(tp->info==key){
+        node* tmp=tp->next;
+        tp->next=tp->next->next;
+        if(tp->next!=NULL)
+            tp->next->prev=tp;
+        free(tmp);
+    }
+    else
+        printf("Key Doesn't Exist!!");
+}
+else
+    printf("Linked List Doesn't Exist!!");
+return head;
+}
+void traverse_beg(node* head){
+if(head!=NULL){
+    node* tp=head;
+    while(tp!=NULL){
+        printf("%d<->",tp->info);
+        tp=tp->next;
+    }
+}
+else
+    printf("Linked List Doesn't Exist!!");
+}
+void traverse_end(node* head){
+if(head!=NULL){
+    node* tp=head;
+    while(tp->next!=NULL)
+        tp=tp->next;
+    while(tp!=NULL){
+        printf("%d<->",tp->info);
+        tp=tp->prev;
+    }
+}
+else
+    printf("Linked List Doesn't Exist!!");
+}
+int main(){
+node*head=NULL;
+int flag=0,a,data;
+while(flag!=1){
+    printf("WHAT U WANT TO DO??\n 1. Insert at end \n 2. Insert at beg \n 3. Insert after \n 4. Delete at end \n 5. Delete at beg \n 6. Delete after \n 7. Reverse Traverse \n 8. Traverse \n 9. Search \n 10. EXIT \n");
+    scanf("%d",&a);
+    switch(a){
+        case 1:
+            head=insert_end(head,create_node());
+            traverse_beg(head);
+            break;
+        case 2:
+            head=insert_beg(head,create_node());
+            traverse_beg(head);
+            break;
+        case 3:
+            printf("What is the key??");
+            scanf("%d",&data);
+            head=insert_after(head,create_node(),data);
+            traverse_beg(head);
+            break;
+        case 4:
+            head=delete_end(head);
+            traverse_beg(head);
+            break;
+        case 5:
+            head=delete_beg(head);
+            traverse_beg(head);
+            break;
+        case 6:
+            printf("What is the key??");
+            scanf("%d",&data);
+            head=delete_after(head,data);
+            traverse_beg(head);
+            break;
+        case 7:
+            traverse_end(head);
+            break;
+        case 8:
+            traverse_beg(head);
+            break;
+        case 9:
+            flag=1;
+            break;
+        default:
+            printf("ERROR INVALID INPUT!");
+            break;
+        }
+    }
+return 0;
+}
